@@ -2,21 +2,18 @@ define(function(require, exports, module){
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var app;
-var config;
-var mirrors;
+var ext_utils;
 var registry;
+var current;
 
-app = brackets.getModule('utils/AppInit');
-config = require('./config');
-mirrors = {};
+ext_utils = brackets.getModule('utils/ExtensionUtils');
+ext_utils.loadStyleSheet(module, 'main.css');
+
 registry = {};
-
-brackets.getModule('utils/ExtensionUtils').loadStyleSheet(module, 'main.css');
 
 ////////////////////////////////////////////////////////////////////////////////
 
-app.appReady(function(){
+brackets.getModule('utils/AppInit').appReady(function(){
     var editor = brackets.getModule('editor/EditorManager');
 
     $(editor).on('activeEditorChange', onActiveEditorChange);
@@ -27,19 +24,30 @@ app.appReady(function(){
 
 ////////////////////////////////////////////////////////////////////////////////
 
+var config = require('./config');
+
 function onActiveEditorChange(event, editor){
+    var file, ext;
     var gutters;
-    var cm;
 
     if (!editor || !editor.document)
         return;
 
-    cm = mirrors[editor.document.file.fullPath] = editor._codeMirror;
-    gutters = cm.getOption('gutters');
+    file = editor.document.file.fullPath;
+    ext = file.split('.').pop().toLowerCase();
+
+    registry[file] = registry[file] || {
+        cm: null, widget: [], data: null,
+        config: config[ext], check: davayProveryai
+    };
+    current = registry[file];
+    current.cm = editor._codeMirror;
+
+    gutters = editor._codeMirror.getOption('gutters');
 
     if (gutters.indexOf('lintyai-gutter') == -1){
         gutters.push('lintyai-gutter');
-        cm.setOption('gutters', gutters);
+        editor._codeMirror.setOption('gutters', gutters);
     }
 
     onDocumentSaved(null, editor.document);
@@ -48,81 +56,85 @@ function onActiveEditorChange(event, editor){
 ////////////////////////////////////////////////////////////////////////////////
 
 function onDocumentSaved(event, document){
-    var file, ext;
-    var gutter, widget;
+    if (document.file.isDirty || !current.config)
+        return;
 
-    file = document.file.fullPath;
-    ext = file.split('.').pop().toLowerCase();
+    if (!event && current.data !== null)
+        return current.check();
 
-    registry[file] = registry[file] || [];
-
-    gutter = $('<div class="lintyai-gutter">&nbsp;</div>');
-    widget = $('<div class="lintyai-line-widget" />');
-
-    !document.file.isDirty && config[ext] &&
     lintyai(function(){
-        this.commander(config[ext].cmd + ' "' + file + '"').
-        fail(function(err){
-            console.error('[lintayi] ' + err);
-        }).
+        var dir, cmd;
+
+        dir = ext_utils.getModulePath(module, 'node/node_modules/.bin');
+        cmd = current.config.cmd.replace('%s', dir);
+
+        this.commander(cmd + ' "' + document.file.fullPath + '"').
         done(function(data){
-            var lint;
-
-            mirrors[file].clearGutter('lintyai-gutter');
-
-            for (var i in registry[file])
-                registry[file][i].clear();
-
-            if (!data || !(lint = config[ext].re(data)))
-                return;
-
-            if (lint.line)
-                lint = [lint];
-
-            for (var i in lint){
-                var type;
-
-                if (config[ext].type){
-                    for (type in config[ext].type){
-                        if (config[ext].type[type].test(lint[i].message))
-                            break;
-
-                        type = null;
-                    }
-                }
-
-                mirrors[file].setGutterMarker(
-                    (lint[i].line - 1),
-                    'lintyai-gutter', gutter.clone().addClass(type)[0]
-                );
-
-                registry[file].push(mirrors[file].addLineWidget(
-                    (lint[i].line - 1),
-                    widget.clone().addClass(type).text(lint[i].message.trim())[0],
-                    {coverGutter: true}
-                ));
-            }
+            current.data = data;
+            current.check();
         });
     });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function lintyai(cb){
-    var node = new (brackets.getModule('utils/NodeConnection'));
+function davayProveryai(){
+    var gutter, widget;
+    var lint;
 
+    gutter = $('<div class="lintyai-gutter">&nbsp;</div>');
+    widget = $('<div class="lintyai-line-widget" />');
+
+    this.cm.clearGutter('lintyai-gutter');
+
+    for (var i in this.widget)
+        this.widget[i].clear();
+
+    this.widget = [];
+
+    if (!this.data || !(lint = this.config.re(this.data)))
+        return;
+
+    if (lint.line)
+        lint = [lint];
+
+    for (var i in lint){
+        var type;
+
+        if (this.config.type){
+            for (type in this.config.type){
+                if (this.config.type[type].test(lint[i].message))
+                    break;
+
+                type = null;
+            }
+        }
+
+        this.cm.setGutterMarker(
+            (lint[i].line - 1),
+            'lintyai-gutter', gutter.clone().addClass(type)[0]
+        );
+
+        this.widget.push(this.cm.addLineWidget(
+            (lint[i].line - 1),
+            widget.clone().addClass(type).text(lint[i].message.trim())[0],
+            {coverGutter: true}
+        ));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+var node = new (brackets.getModule('utils/NodeConnection'));
+
+function lintyai(cb){
     if (node.domains.lintyai)
         return cb.call(node.domains.lintyai);
 
     node.connect(true).done(function(){
-        var utils, path;
+        var path = ext_utils.getModulePath(module, 'node/commander');
 
-        utils = brackets.getModule('utils/ExtensionUtils');
-        path = [];
-
-        path.push(utils.getModulePath(module, 'node/commander'));
-
-        node.loadDomains(path, true).done(function(){
+        node.loadDomains([path], true).done(function(){
             cb.call(node.domains.lintyai);
         });
     });

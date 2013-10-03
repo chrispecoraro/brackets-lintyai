@@ -4,7 +4,7 @@ define(function(require, exports){
 
 // http://jshint.com/
 exports.js = {};
-exports.js.cmd = 'D:/bin/lang/node/jshint';
+exports.js.cmd = '%s/jshint';
 exports.js.re = function(data){
     var result = [];
 
@@ -28,9 +28,38 @@ exports.js.type.notice = / but never used/;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// http://lesscss.org/
+exports.css =
+exports.less = {};
+exports.css.cmd = '%s/lessc -l --no-color';
+exports.css.re = function(data){
+    var match = / in (.+) on line (\d+), column (\d+):/m.exec(data);
+
+    return {
+        line: match[2],
+        message: data.replace(match[0])
+    };
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+// https://github.com/zaach/jsonlint/
+exports.json = {};
+exports.json.cmd = '%s/jsonlint -q';
+exports.json.re = function(data){
+    var match = /(.+) on line (\d+):/.exec(data);
+
+    return {
+        line: match[2],
+        message: data.replace(match[0], '').trim().slice(0, -1)
+    };
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
 // http://php.net/
 exports.php = {};
-exports.php.cmd = 'D:/bin/php -l';
+exports.php.cmd = 'D:/bin/lang/php/php -l';
 exports.php.re = function(data){
     var match = /(.+) in (.+) on line (\d+)/.exec(data);
 
@@ -43,16 +72,15 @@ exports.php.re = function(data){
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// http://lesscss.org/
-exports.css =
-exports.less = {};
-exports.css.cmd = 'D:/bin/lang/node/lessc -l --no-color';
-exports.css.re = function(data){
-    var match = /(.+) in (.+) on line (\d+)/.exec(data);
+// http://lua.org/
+exports.lua = {};
+exports.lua.cmd = 'D:/bin/lang/lua/bin/luac -p';
+exports.lua.re = function(data){
+    var match = /(.+): (.+):(\d+): /.exec(data);
 
     return {
         line: match[3],
-        message: match[1]
+        message: data.replace(match[0], '')
     };
 };
 
@@ -86,34 +114,6 @@ exports.html =
 exports.htm = {};
 exports.html.cmd = 'D:/bin/lang/xmllint/xmllint --noout --debug --html';
 exports.html.re = exports.xml.re;
-
-////////////////////////////////////////////////////////////////////////////////
-
-// http://lua.org/
-exports.lua = {};
-exports.lua.cmd = 'D:/bin/lang/lua/bin/luac -p';
-exports.lua.re = function(data){
-    var match = /(.+): (.+):(\d+): /.exec(data);
-
-    return {
-        line: match[3],
-        message: data.replace(match[0], '')
-    };
-};
-
-////////////////////////////////////////////////////////////////////////////////
-
-// https://github.com/zaach/jsonlint/
-exports.json = {};
-exports.json.cmd = 'D:/bin/lang/node/jsonlint -q';
-exports.json.re = function(data){
-    var match = /(.+) on line (\d+):/.exec(data);
-
-    return {
-        line: match[2],
-        message: data.replace(match[0], '').trim().slice(0, -1)
-    };
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 
