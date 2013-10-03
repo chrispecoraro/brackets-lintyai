@@ -15,6 +15,6 @@ See `config.js`.
 [JSL]: http://javascriptlint.com/
 [CSS]: http://lesscss.org/
 [JSON]: https://github.com/zaach/jsonlint/
-[XML]: http://xmlsoft.org/ "XML/HTML Lint"
+[XML]: http://xmlsoft.org/
 [PHP]: http://php.net/
 [Lua]: http://lua.org/
