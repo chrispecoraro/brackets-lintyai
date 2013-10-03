@@ -2,12 +2,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var fs, path;
-var process;
+var child_process;
 
-fs = require('fs');
-path = require('path');
-process = require('child_process');
+child_process = require('child_process');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +21,7 @@ exports.init = function(manager){
 ////////////////////////////////////////////////////////////////////////////////
 
 function commander(exec, cb){
-    process.exec(exec, function(err, stdout, stderr){
+    child_process.exec(exec, function(err, stdout, stderr){
         cb(null, stderr + stdout);
     });
 }
