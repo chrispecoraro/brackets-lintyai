@@ -1,4 +1,4 @@
-define(function(require, exports, module){
+define(function(require, exports){
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -22,9 +22,9 @@ exports.js.re = function(data){
 
     return result;
 };
-exports.js.type = {
-    warning: /Missing /
-};
+exports.js.type = {};
+exports.js.type.warning = /Missing /;
+exports.js.type.notice = / but never used/;
 
 ////////////////////////////////////////////////////////////////////////////////
 
