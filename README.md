@@ -5,8 +5,6 @@ External linter commander for [Adobe Brackets]. Work with [JSL] for JavaScript, 
 
 ![Screenshot](examples/screenshot.png)
 
-![Screenshot](https://raw.github.com/lexazloy/lintyai/master/examples/screenshot.png)
-
 USE
 ---
 
