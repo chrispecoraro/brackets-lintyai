@@ -3,7 +3,7 @@ Lintyai
 
 External linter commander for [Adobe Brackets]. Work with [JSL] for JavaScript, [CSS] and [LESS][CSS], [JSON], [XML] and [HTML][XML], [PHP] and [Lua].
 
-![Screenshot](https://raw.github.com/lexazloy/examples/screenshot.png)
+![Screenshot](https://raw.github.com/lexazloy/lintyai/examples/screenshot.png)
 
 USE
 ---
