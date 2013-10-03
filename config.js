@@ -2,20 +2,17 @@ define(function(require, exports, module){
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// http://javascriptlint.com/
+// http://jshint.com/
 exports.js = {};
-exports.js.cmd = 'D:/bin/lang/jsl/jsl-with-conf -nologo -nosummary -nofilelisting -process';
-exports.js.type = {
-    warning: /lint warning: /
-};
+exports.js.cmd = 'D:/bin/lang/node/jshint';
 exports.js.re = function(data){
     var result = [];
 
-    data.split('^\r\n').forEach(function(element){
+    data.split('\n').forEach(function(element){
         var match;
 
-        element += '^';
-        match = /^(.+)\((\d+)\)\: /m.exec(element);
+        element += '\n';
+        match = /^(.+): line (\d+), col (\d+), /.exec(element);
 
         match && result.push({
             line: match[2],
@@ -24,6 +21,9 @@ exports.js.re = function(data){
     });
 
     return result;
+};
+exports.js.type = {
+    warning: /Missing /
 };
 
 ////////////////////////////////////////////////////////////////////////////////
