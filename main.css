@@ -1,0 +1,27 @@
+.lintyai-gutter {
+    width: 1px;
+    background: #cc3333;
+}
+
+.lintyai-gutter.warning {
+    background: #ff9933;
+}
+
+.lintyai-gutter.notice {
+    background: #ffcc66;
+}
+
+.lintyai-line-widget {
+    color: #fff;
+    background: #cc3333;
+    padding: 5px 0 5px 60px;
+    white-space: pre;
+}
+
+.lintyai-line-widget.warning {
+    background: #ff9933;
+}
+
+.lintyai-line-widget.notice {
+    background: #ffcc66;
+}
