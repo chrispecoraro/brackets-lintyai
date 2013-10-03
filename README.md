@@ -1,7 +1,7 @@
 Lintyai
 =======
 
-External linter commander for [Adobe Brackets]. Work with [JSL] for JavaScript, [CSS] and [LESS][CSS], [JSON], [XML] and [HTML][XML], [PHP] and [Lua].
+External linter commander for [Adobe Brackets]. Work with [JS], [CSS] and [LESS][CSS], [JSON], [XML] and [HTML][XML], [PHP] and [Lua].
 
 ![Screenshot](examples/screenshot.png)
 
@@ -12,7 +12,7 @@ See `config.js`.
 
 [Adobe Brackets]: https://github.com/adobe/brackets/
 
-[JSL]: http://javascriptlint.com/
+[JS]: http://jshint.com/
 [CSS]: http://lesscss.org/
 [JSON]: https://github.com/zaach/jsonlint/
 [XML]: http://xmlsoft.org/
