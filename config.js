@@ -3,9 +3,9 @@ define(function(require, exports){
 ////////////////////////////////////////////////////////////////////////////////
 
 // http://jshint.com/
-exports.js = {};
-exports.js.cmd = '%s/jshint';
-exports.js.re = function(data){
+exports.javascript = {};
+exports.javascript.cmd = '%s/jshint';
+exports.javascript.re = function(data){
     var result = [];
 
     data.split('\n').forEach(function(element){
@@ -22,9 +22,9 @@ exports.js.re = function(data){
 
     return result;
 };
-exports.js.type = {};
-exports.js.type.warning = /Missing /;
-exports.js.type.notice = / but never used/;
+exports.javascript.type = {};
+exports.javascript.type.warning = /Missing /;
+exports.javascript.type.notice = / but never used/;
 
 ////////////////////////////////////////////////////////////////////////////////
 

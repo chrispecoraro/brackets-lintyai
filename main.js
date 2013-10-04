@@ -27,18 +27,18 @@ brackets.getModule('utils/AppInit').appReady(function(){
 var config = require('./config');
 
 function onActiveEditorChange(event, editor){
-    var file, ext;
+    var file, lang;
     var gutters;
 
     if (!editor || !editor.document)
         return;
 
     file = editor.document.file.fullPath;
-    ext = file.split('.').pop().toLowerCase();
+    lang = editor.document.getLanguage().getId();
 
     registry[file] = registry[file] || {
         cm: null, widget: [], data: null,
-        config: config[ext], check: davayProveryai
+        config: config[lang], check: davayProveryai
     };
     current = registry[file];
     current.cm = editor._codeMirror;
