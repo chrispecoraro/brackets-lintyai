@@ -1,6 +1,9 @@
 .lintyai-gutter {
-    width: 1px;
+    width: 40px;
+    color: #fff;
     background: #cc3333;
+    text-align: right;
+    padding-right: 5px;
 }
 
 .lintyai-gutter.warning {
