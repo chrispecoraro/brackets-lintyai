@@ -37,7 +37,7 @@ function onActiveEditorChange(event, editor){
     lang = editor.document.getLanguage().getId();
 
     registry[file] = registry[file] || {
-        cm: null, widget: [], data: null,
+        cm: null, data: null, widget: {}, _widget: {},
         config: config[lang], check: davayProveryai
     };
     current = registry[file];
@@ -48,6 +48,8 @@ function onActiveEditorChange(event, editor){
     if (gutters.indexOf('lintyai-gutter') == -1){
         gutters.push('lintyai-gutter');
         editor._codeMirror.setOption('gutters', gutters);
+
+        current.cm.on('gutterClick', onGutterClick);
     }
 
     onDocumentSaved(null, editor.document);
@@ -79,48 +81,76 @@ function onDocumentSaved(event, document){
 ////////////////////////////////////////////////////////////////////////////////
 
 function davayProveryai(){
-    var gutter, widget;
     var lint;
-
-    gutter = $('<div class="lintyai-gutter">&nbsp;</div>');
-    widget = $('<div class="lintyai-line-widget" />');
+    var gutter, widget;
 
     this.cm.clearGutter('lintyai-gutter');
 
-    for (var i in this.widget)
-        this.widget[i].clear();
+    for (var i in this._widget){
+        while (this._widget[i].length)
+            this._widget[i].pop().clear();
+    }
 
-    this.widget = [];
+    this.widget = {};
+    this._widget = {};
 
     if (!this.data || !(lint = this.config.re(this.data)))
         return;
 
-    if (lint.line)
-        lint = [lint];
+    lint = (lint.line ? [lint] : lint);
+
+    gutter = $('<div class="lintyai-gutter" />');
+    widget = $('<div class="lintyai-line-widget" />');
 
     for (var i in lint){
         var type;
+        var line;
 
-        if (this.config.type){
+        if (this.config.type)
             for (type in this.config.type){
                 if (this.config.type[type].test(lint[i].message))
                     break;
 
                 type = null;
             }
-        }
 
+        line = (lint[i].line - 1);
+
+        this.widget[line] = this.widget[line] || [];
+        this._widget[line] = [];
+
+        !this.widget[line].length &&
         this.cm.setGutterMarker(
-            (lint[i].line - 1),
-            'lintyai-gutter', gutter.clone().addClass(type)[0]
+            line, 'lintyai-gutter',
+            gutter.clone().addClass(type).text(lint[i].line)[0]
         );
 
-        this.widget.push(this.cm.addLineWidget(
-            (lint[i].line - 1),
-            widget.clone().addClass(type).text(lint[i].message.trim())[0],
-            {coverGutter: true}
-        ));
+        this.widget[line].push(
+            widget.clone().addClass(type).text(lint[i].message.trim())[0]
+        );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function onGutterClick(event, line){
+    var widget, _widget;
+
+    widget = current.widget[line];
+    _widget = current._widget[line];
+
+    if (!widget)
+        return;
+
+    if (_widget.length){
+        while (_widget.length)
+            _widget.pop().clear();
+
+        return;
+    }
+
+    for (var i in widget)
+        _widget.push(current.cm.addLineWidget(line, widget[i], {coverGutter: true}));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
