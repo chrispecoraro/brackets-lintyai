@@ -23,8 +23,8 @@ exports.javascript.re = function(data){
     return result;
 };
 exports.javascript.type = {};
-exports.javascript.type.warning = /Missing /;
-exports.javascript.type.notice = / but never used/;
+exports.javascript.type.warning = /(Missing\s|Unnecessary\s)/;
+exports.javascript.type.notice = /\sbut never used/;
 
 ////////////////////////////////////////////////////////////////////////////////
 
