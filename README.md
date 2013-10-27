@@ -25,7 +25,7 @@ LICENSE
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Лёха zloy и красивый <<lexazloy@gmail.com>> (<http://lexa.cutenews.ru>)
+Copyright (c) 2013 [Лёха zloy и красивый](<http://lexa.cutenews.ru>) <<lexazloy@gmail.com>>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
