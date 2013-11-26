@@ -67,7 +67,7 @@ function onDocumentSaved(event, document){
     lintyai(function(){
         var dir, cmd;
 
-        dir = ext_utils.getModulePath(module, 'node/node_modules/.bin');
+        dir = ext_utils.getModulePath(module, 'node/node_modules');
         cmd = current.config.cmd.replace('%s', dir);
 
         this.commander(cmd + ' "' + document.file.fullPath + '"').

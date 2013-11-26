@@ -4,7 +4,7 @@ define(function(require, exports){
 
 // http://jshint.com/
 exports.javascript = {};
-exports.javascript.cmd = '%s/jshint';
+exports.javascript.cmd = 'node %s/jshint/bin/jshint';
 exports.javascript.re = function(data){
     var result = [];
 
@@ -31,7 +31,7 @@ exports.javascript.type.notice = /\sbut never used/;
 // http://lesscss.org/
 exports.css =
 exports.less = {};
-exports.css.cmd = '%s/lessc -l --no-color';
+exports.css.cmd = 'node %s/less/bin/lessc -l --no-color';
 exports.css.re = function(data){
     var match = / in (.+) on line (\d+), column (\d+):/m.exec(data);
 
@@ -45,7 +45,7 @@ exports.css.re = function(data){
 
 // https://github.com/zaach/jsonlint/
 exports.json = {};
-exports.json.cmd = '%s/jsonlint -q';
+exports.json.cmd = 'node %s/jsonlint/lib/cli.js -q';
 exports.json.re = function(data){
     var match = /(.+) on line (\d+):/.exec(data);
 
