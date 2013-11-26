@@ -67,7 +67,7 @@ function onDocumentSaved(event, document){
     lintyai(function(){
         var dir, cmd;
 
-        dir = ext_utils.getModulePath(module, 'node/node_modules');
+        dir = ext_utils.getModulePath(module, 'node/node_modules/');
         cmd = current.config.cmd.replace('%s', dir);
 
         this.commander(cmd + ' "' + document.file.fullPath + '"').
@@ -162,7 +162,7 @@ function lintyai(cb){
         return cb.call(node.domains.lintyai);
 
     node.connect(true).done(function(){
-        var path = ext_utils.getModulePath(module, 'node/commander');
+        var path = ext_utils.getModulePath(module, 'node/commander.js');
 
         node.loadDomains([path], true).done(function(){
             cb.call(node.domains.lintyai);
