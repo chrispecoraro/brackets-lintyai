@@ -8,15 +8,12 @@ exports.javascript.cmd = 'node "%s/jshint/bin/jshint"';
 exports.javascript.re = function(data){
     var result = [];
 
-    data.split('\n').forEach(function(element){
-        var match;
-
-        element += '\n';
-        match = /^(.+): line (\d+), col (\d+), /.exec(element);
+    data.split('\n').forEach(function(data){
+        var match = /^(.+): line (\d+), col (\d+), /.exec(data);
 
         match && result.push({
             line: match[2],
-            message: element.replace(match[0], '')
+            message: data.replace(match[0], '')
         });
     });
 
@@ -72,6 +69,28 @@ exports.php.re = function(data){
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// http://pear.php.net/package/PHP_CodeSniffer
+/*exports.php = {};
+exports.php.cmd = 'php "E:/Desktop/PHP_CodeSniffer-1.4.8/scripts/phpcs"';
+exports.php.re = function(data){
+    var result = [];
+
+    data.split('\n').slice(5, -3).forEach(function(data){
+        var match = data.split(' | ');
+
+        match.length && result.push({
+            line: match[0].trim(),
+            message: [match[1].trim(), match[2].trim()].join(': ')
+        });
+    });
+
+    return result;
+};
+exports.php.type = {};
+exports.php.type.warning = /WARNING\: /;*/
+
+////////////////////////////////////////////////////////////////////////////////
+
 // http://lua.org/
 exports.lua = {};
 exports.lua.cmd = 'D:/bin/lang/lua/bin/luac -p';
@@ -92,15 +111,15 @@ exports.xml.cmd = 'D:/bin/lang/xmllint/xmllint --noout --debug';
 exports.xml.re = function(data){
     var result = [];
 
-    data.split('^\r\n').forEach(function(element){
+    data.split('^\r\n').forEach(function(data){
         var match;
 
-        element += '^';
-        match = /^(.+):(\d+): /m.exec(element);
+        data += '^';
+        match = /^(.+):(\d+): /m.exec(data);
 
         match && result.push({
             line: match[2],
-            message: element.replace(match[0], '')
+            message: data.replace(match[0], '')
         });
     });
 
