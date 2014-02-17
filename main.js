@@ -122,11 +122,11 @@ function davayProveryai(){
         !this.widget[line].length &&
         this.cm.setGutterMarker(
             line, 'lintyai-gutter',
-            gutter.clone().addClass(type).text(lint[i].line)[0]
+            gutter.clone().addClass(type || 'error').text(lint[i].line)[0]
         );
 
         this.widget[line].push(
-            widget.clone().addClass(type).text(lint[i].message.trim())[0]
+            widget.clone().addClass(type || 'error').text(lint[i].message.trim())[0]
         );
     }
 }
