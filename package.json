@@ -1,6 +1,6 @@
 {
     "name": "lintyai",
-    "version": "1.0.7",
+    "version": "1.0.8",
 
     "title": "Lintyai",
     "homepage": "https://github.com/lexazloy/lintyai",
@@ -10,6 +10,6 @@
     "license": "MIT",
 
     "engines": {
-        "brackets": ">=0.31.0"
+        "brackets": ">=0.36.0"
     }
 }
